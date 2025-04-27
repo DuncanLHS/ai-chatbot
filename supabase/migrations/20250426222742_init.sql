@@ -6,7 +6,8 @@ create table public.chat (
   "createdAt" timestamp without time zone not null default now(),
   title text not null,
   "userId" uuid not null default auth.uid (),
-  visibility text not null default 'private',  constraint chat_pkey primary key (id),
+  visibility text not null default 'private',
+  constraint chat_pkey primary key (id),
   constraint chat_userId_fkey foreign KEY ("userId") references auth.users (id)
 );
 
@@ -17,7 +18,8 @@ create table public.document (
   title text not null,
   content text null,
   kind text not null default 'text',
-  "userId" uuid not null default auth.uid (),  constraint document_id_createdAt_pk primary key (id, "createdAt"),
+  "userId" uuid not null default auth.uid (),
+  constraint document_id_createdAt_pk primary key (id, "createdAt"),
   constraint document_userId_fkey foreign KEY ("userId") references auth.users (id)
 );
 
@@ -31,7 +33,8 @@ create table public.suggestion (
   description text null,
   "isResolved" boolean not null default false,
   "userId" uuid not null default auth.uid (),
-  "createdAt" timestamp without time zone not null default now(),  constraint suggestion_id_pk primary key (id),
+  "createdAt" timestamp without time zone not null default now(),
+  constraint suggestion_id_pk primary key (id),
   constraint suggestion_documentId_documentCreatedAt_document_id_createdAt_f foreign KEY ("documentId", "documentCreatedAt") references public.document (id, "createdAt") on delete CASCADE,
   constraint suggestion_userId_fkey foreign KEY ("userId") references auth.users (id)
 );
@@ -43,7 +46,8 @@ create table public.message (
   role text not null,
   parts json not null,
   attachments json not null,
-  "createdAt" timestamp without time zone not null,  constraint message_pkey primary key (id),
+  "createdAt" timestamp without time zone not null default now(),
+  constraint message_pkey primary key (id),
   constraint message_chatId_chat_id_fk foreign KEY ("chatId") references public.chat (id) on delete CASCADE
 );
 
@@ -51,7 +55,8 @@ create table public.message (
 create table public.vote (
   "chatId" uuid not null,
   "messageId" uuid not null,
-  "isUpvoted" boolean not null,  constraint vote_chatId_messageId_pk primary key ("chatId", "messageId"),
+  "isUpvoted" boolean not null,
+  constraint vote_chatId_messageId_pk primary key ("chatId", "messageId"),
   constraint vote_chatId_chat_id_fk foreign KEY ("chatId") references public.chat (id) on delete CASCADE,
   constraint vote_messageId_message_id_fk foreign KEY ("messageId") references public.message (id) on delete CASCADE
 );

@@ -97,7 +97,7 @@ export type Database = {
         Insert: {
           attachments: Json
           chatId: string
-          createdAt: string
+          createdAt?: string
           id?: string
           parts: Json
           role: string
