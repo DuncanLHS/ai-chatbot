@@ -63,7 +63,7 @@ export type Database = {
           content: string | null
           createdAt: string
           id: string
-          kind: string
+          kind: Database["public"]["Enums"]["document_kind"]
           title: string
           userId: string
         }
@@ -71,7 +71,7 @@ export type Database = {
           content?: string | null
           createdAt?: string
           id?: string
-          kind?: string
+          kind?: Database["public"]["Enums"]["document_kind"]
           title: string
           userId?: string
         }
@@ -79,7 +79,7 @@ export type Database = {
           content?: string | null
           createdAt?: string
           id?: string
-          kind?: string
+          kind?: Database["public"]["Enums"]["document_kind"]
           title?: string
           userId?: string
         }
@@ -205,7 +205,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      document_kind: "text" | "code" | "image" | "sheet"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -323,7 +323,9 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      document_kind: ["text", "code", "image", "sheet"],
+    },
   },
 } as const
 

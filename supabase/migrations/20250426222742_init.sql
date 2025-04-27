@@ -1,5 +1,7 @@
 -- Initialize schema for AI chatbot
 
+create type document_kind AS enum ('text', 'code', 'image', 'sheet');
+
 -- Create chat table
 create table public.chat (
   id uuid not null default gen_random_uuid (),
@@ -17,7 +19,7 @@ create table public.document (
   "createdAt" timestamp without time zone not null default now(),
   title text not null,
   content text null,
-  kind text not null default 'text',
+  kind document_kind not null default 'text',
   "userId" uuid not null default auth.uid (),
   constraint document_id_createdAt_pk primary key (id, "createdAt"),
   constraint document_userId_fkey foreign KEY ("userId") references auth.users (id)
