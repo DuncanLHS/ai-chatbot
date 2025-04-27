@@ -34,7 +34,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      Chat: {
+      chat: {
         Row: {
           createdAt: string
           id: string
@@ -43,10 +43,10 @@ export type Database = {
           visibility: string
         }
         Insert: {
-          createdAt: string
+          createdAt?: string
           id?: string
           title: string
-          userId: string
+          userId?: string
           visibility?: string
         }
         Update: {
@@ -56,17 +56,9 @@ export type Database = {
           userId?: string
           visibility?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "Chat_userId_User_id_fk"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      Document: {
+      document: {
         Row: {
           content: string | null
           createdAt: string
@@ -77,11 +69,11 @@ export type Database = {
         }
         Insert: {
           content?: string | null
-          createdAt: string
+          createdAt?: string
           id?: string
           kind?: string
           title: string
-          userId: string
+          userId?: string
         }
         Update: {
           content?: string | null
@@ -91,49 +83,9 @@ export type Database = {
           title?: string
           userId?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "Document_userId_User_id_fk"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      Message: {
-        Row: {
-          chatId: string
-          content: Json
-          createdAt: string
-          id: string
-          role: string
-        }
-        Insert: {
-          chatId: string
-          content: Json
-          createdAt: string
-          id?: string
-          role: string
-        }
-        Update: {
-          chatId?: string
-          content?: Json
-          createdAt?: string
-          id?: string
-          role?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Message_chatId_Chat_id_fk"
-            columns: ["chatId"]
-            isOneToOne: false
-            referencedRelation: "Chat"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Message_v2: {
+      message: {
         Row: {
           attachments: Json
           chatId: string
@@ -160,15 +112,15 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Message_v2_chatId_Chat_id_fk"
+            foreignKeyName: "message_chatid_chat_id_fk"
             columns: ["chatId"]
             isOneToOne: false
-            referencedRelation: "Chat"
+            referencedRelation: "chat"
             referencedColumns: ["id"]
           },
         ]
       }
-      Suggestion: {
+      suggestion: {
         Row: {
           createdAt: string
           description: string | null
@@ -181,7 +133,7 @@ export type Database = {
           userId: string
         }
         Insert: {
-          createdAt: string
+          createdAt?: string
           description?: string | null
           documentCreatedAt: string
           documentId: string
@@ -189,7 +141,7 @@ export type Database = {
           isResolved?: boolean
           originalText: string
           suggestedText: string
-          userId: string
+          userId?: string
         }
         Update: {
           createdAt?: string
@@ -204,40 +156,15 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Suggestion_documentId_documentCreatedAt_Document_id_createdAt_f"
+            foreignKeyName: "suggestion_documentid_documentcreatedat_document_id_createdat_f"
             columns: ["documentId", "documentCreatedAt"]
             isOneToOne: false
-            referencedRelation: "Document"
+            referencedRelation: "document"
             referencedColumns: ["id", "createdAt"]
           },
-          {
-            foreignKeyName: "Suggestion_userId_User_id_fk"
-            columns: ["userId"]
-            isOneToOne: false
-            referencedRelation: "User"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      User: {
-        Row: {
-          email: string
-          id: string
-          password: string | null
-        }
-        Insert: {
-          email: string
-          id?: string
-          password?: string | null
-        }
-        Update: {
-          email?: string
-          id?: string
-          password?: string | null
-        }
-        Relationships: []
-      }
-      Vote: {
+      vote: {
         Row: {
           chatId: string
           isUpvoted: boolean
@@ -255,50 +182,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Vote_chatId_Chat_id_fk"
+            foreignKeyName: "vote_chatid_chat_id_fk"
             columns: ["chatId"]
             isOneToOne: false
-            referencedRelation: "Chat"
+            referencedRelation: "chat"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Vote_messageId_Message_id_fk"
+            foreignKeyName: "vote_messageid_message_id_fk"
             columns: ["messageId"]
             isOneToOne: false
-            referencedRelation: "Message"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Vote_v2: {
-        Row: {
-          chatId: string
-          isUpvoted: boolean
-          messageId: string
-        }
-        Insert: {
-          chatId: string
-          isUpvoted: boolean
-          messageId: string
-        }
-        Update: {
-          chatId?: string
-          isUpvoted?: boolean
-          messageId?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Vote_v2_chatId_Chat_id_fk"
-            columns: ["chatId"]
-            isOneToOne: false
-            referencedRelation: "Chat"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Vote_v2_messageId_Message_v2_id_fk"
-            columns: ["messageId"]
-            isOneToOne: false
-            referencedRelation: "Message_v2"
+            referencedRelation: "message"
             referencedColumns: ["id"]
           },
         ]
