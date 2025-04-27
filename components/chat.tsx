@@ -2,8 +2,8 @@
 
 import { ChatHeader } from '@/components/chat-header';
 import { useArtifactSelector } from '@/hooks/use-artifact';
-import { UserType } from '@/lib/ai/entitlements';
-import { Tables } from '@/lib/db/database.types';
+import type { UserType } from '@/lib/ai/entitlements';
+import type { Tables } from '@/lib/db/database.types';
 import { fetcher, generateUUID } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
 import type { Attachment, UIMessage } from 'ai';

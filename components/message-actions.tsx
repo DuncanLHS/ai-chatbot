@@ -1,4 +1,4 @@
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import type { Message } from 'ai';
 import { useSWRConfig } from 'swr';
 import { useCopyToClipboard } from 'usehooks-ts';

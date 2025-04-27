@@ -1,5 +1,5 @@
 import { useChatVisibility } from '@/hooks/use-chat-visibility';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import Link from 'next/link';
 import { memo } from 'react';
 import {

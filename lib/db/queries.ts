@@ -3,7 +3,7 @@ import 'server-only';
 import type { ArtifactKind } from '@/components/artifact';
 import type { User } from '@supabase/supabase-js';
 import { createClient } from '../supabase/server';
-import { Tables, TablesInsert } from './database.types';
+import type { Tables, TablesInsert } from './database.types';
 
 export async function getUser(): Promise<User | undefined> {
   const superbase = await createClient();

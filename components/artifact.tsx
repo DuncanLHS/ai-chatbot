@@ -3,7 +3,7 @@ import { imageArtifact } from '@/artifacts/image/client';
 import { sheetArtifact } from '@/artifacts/sheet/client';
 import { textArtifact } from '@/artifacts/text/client';
 import { useArtifact } from '@/hooks/use-artifact';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { fetcher } from '@/lib/utils';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import type { Attachment, UIMessage } from 'ai';

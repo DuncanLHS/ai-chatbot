@@ -4,7 +4,7 @@ import { sheetDocumentHandler } from '@/artifacts/sheet/server';
 import { textDocumentHandler } from '@/artifacts/text/server';
 import type { ArtifactKind } from '@/components/artifact';
 import type { DataStreamWriter } from 'ai';
-import { Tables } from '../db/database.types';
+import type { Tables } from '../db/database.types';
 import { saveDocument } from '../db/queries';
 
 export interface SaveDocumentProps {

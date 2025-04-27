@@ -1,7 +1,7 @@
 'use client';
 
 import { useArtifact } from '@/hooks/use-artifact';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { cn, fetcher } from '@/lib/utils';
 import equal from 'fast-deep-equal';
 import {

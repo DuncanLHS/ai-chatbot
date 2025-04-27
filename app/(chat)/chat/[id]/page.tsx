@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Chat } from '@/components/chat';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { getChatById, getMessagesByChatId, getUser } from '@/lib/db/queries';
 import type { Attachment, UIMessage } from 'ai';
 

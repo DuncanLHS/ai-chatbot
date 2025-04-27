@@ -1,7 +1,7 @@
 'use client';
 
 import { initialArtifactData, useArtifact } from '@/hooks/use-artifact';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef } from 'react';
 import { artifactDefinitions, type ArtifactKind } from './artifact';

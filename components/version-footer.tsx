@@ -9,7 +9,7 @@ import { useWindowSize } from 'usehooks-ts';
 import { getDocumentTimestampByIndex } from '@/lib/utils';
 
 import { useArtifact } from '@/hooks/use-artifact';
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { LoaderIcon } from './icons';
 import { Button } from './ui/button';
 

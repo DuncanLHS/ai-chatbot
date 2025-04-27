@@ -1,4 +1,4 @@
-import { Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { getDocumentById, saveSuggestions } from '@/lib/db/queries';
 import { generateUUID } from '@/lib/utils';
 import { type DataStreamWriter, streamObject, tool } from 'ai';

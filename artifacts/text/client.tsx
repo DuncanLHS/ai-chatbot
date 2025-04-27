@@ -10,7 +10,7 @@ import {
   UndoIcon,
 } from '@/components/icons';
 import { Editor } from '@/components/text-editor';
-import { type Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
 

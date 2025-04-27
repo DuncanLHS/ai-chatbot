@@ -1,5 +1,5 @@
 import { getUser } from '@/app/auth/actions';
-import { entitlementsByUserType, UserType } from '@/lib/ai/entitlements';
+import { entitlementsByUserType, type UserType } from '@/lib/ai/entitlements';
 import { systemPrompt } from '@/lib/ai/prompts';
 import { myProvider } from '@/lib/ai/providers';
 import { createDocument } from '@/lib/ai/tools/create-document';
@@ -7,7 +7,7 @@ import { getWeather } from '@/lib/ai/tools/get-weather';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { isProductionEnvironment } from '@/lib/constants';
-import { Json } from '@/lib/db/database.types';
+import type { Json } from '@/lib/db/database.types';
 import {
   deleteChatById,
   getChatById,

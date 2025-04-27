@@ -1,4 +1,4 @@
-import { type Tables } from '@/lib/db/database.types';
+import type { Tables } from '@/lib/db/database.types';
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from 'ai';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
