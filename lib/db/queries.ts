@@ -72,27 +72,33 @@ export async function getMyChats({
     if (!user) {
       throw new Error('User not found');
     }
-    
+
     const extendedLimit = limit + 1;
 
-    const query = async (createdAtCondition?: string, comparison?: 'gt' | 'lt') => {
+    const query = async (
+      createdAtCondition?: string,
+      comparison?: 'gt' | 'lt',
+    ) => {
       let queryBuilder = supabase
         .from('chat')
         .select('*')
         .eq('userId', user?.id)
         .order('createdAt', { ascending: false })
         .limit(extendedLimit);
-      
+
       if (createdAtCondition && comparison) {
-        queryBuilder = queryBuilder[comparison]('created_at', createdAtCondition);
+        queryBuilder = queryBuilder[comparison](
+          'created_at',
+          createdAtCondition,
+        );
       }
-      
+
       const { data, error } = await queryBuilder;
-      
+
       if (error) {
         throw error;
       }
-      
+
       return data || [];
     };
 
@@ -152,7 +158,6 @@ export async function getChatById({ id }: { id: string }) {
     throw error;
   }
   return data;
-
 }
 
 export async function saveMessages({
@@ -164,8 +169,8 @@ export async function saveMessages({
   const { data, error } = await supabase
     .from('message')
     .insert(messages)
-    .select()
-    
+    .select();
+
   if (error) {
     console.error('Failed to save messages in database', error);
     throw error;
@@ -212,7 +217,6 @@ export async function voteMessage({
     throw error;
   }
   return data;
-  
 }
 
 export async function getVotesByChatId({ id }: { id: string }) {
@@ -220,7 +224,7 @@ export async function getVotesByChatId({ id }: { id: string }) {
   const { data, error } = await supabase
     .from('vote')
     .select('*')
-    .eq('chatId', id)
+    .eq('chatId', id);
 
   if (error) {
     console.error('Failed to get votes by chat id from database', error);
@@ -241,7 +245,7 @@ export async function saveDocument({
   content: string;
 }) {
   const supabase = await createClient();
-  const {data, error} = await supabase
+  const { data, error } = await supabase
     .from('document')
     .insert({
       id,
@@ -256,7 +260,6 @@ export async function saveDocument({
     throw error;
   }
   return data;
-  
 }
 
 export async function getDocumentsById({ id }: { id: string }) {
@@ -265,7 +268,7 @@ export async function getDocumentsById({ id }: { id: string }) {
     .from('document')
     .select('*')
     .eq('id', id)
-    .single()
+    .single();
 
   if (error) {
     console.error('Failed to get document by id from database', error);
@@ -286,7 +289,6 @@ export async function getDocumentById({ id }: { id: string }) {
     throw error;
   }
   return data;
-  
 }
 
 export async function deleteDocumentsByIdAfterTimestamp({
@@ -302,7 +304,7 @@ export async function deleteDocumentsByIdAfterTimestamp({
     .delete()
     .eq('id', id)
     .gt('created_at', timestamp)
-    .select()
+    .select();
   if (error) {
     console.error('Failed to delete documents by id from database', error);
     throw error;
@@ -379,7 +381,7 @@ export async function deleteMessagesByChatIdAfterTimestamp({
     .delete()
     .eq('chatId', chatId)
     .gt('created_at', timestamp)
-    .select()
+    .select();
 
   if (error) {
     console.error('Failed to delete messages by chat id from database', error);
@@ -417,15 +419,18 @@ export async function getMessageCountByUserId({
   const supabase = await createClient();
   const { count, error } = await supabase
     .from('message')
-    .select('*', {count: 'exact', head: true})
+    .select('*', { count: 'exact', head: true })
     .eq('userId', id)
-    .gte('created_at', new Date(Date.now() - differenceInHours * 60 * 60 * 1000))
+    .gte(
+      'created_at',
+      new Date(Date.now() - differenceInHours * 60 * 60 * 1000),
+    )
     .single();
   if (error) {
     console.error(
-      'Failed to get message count by user id for the last 24 hours from database')
+      'Failed to get message count by user id for the last 24 hours from database',
+    );
     throw error;
   }
   return count ?? 0;
-  
 }

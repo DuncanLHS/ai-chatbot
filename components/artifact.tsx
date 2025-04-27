@@ -127,7 +127,9 @@ function PureArtifact({
     (updatedContent: string) => {
       if (!artifact) return;
 
-      mutate<Array<Omit<Tables<'document'>, 'createdAt'> & { createdAt: Date }>>(
+      mutate<
+        Array<Omit<Tables<'document'>, 'createdAt'> & { createdAt: Date }>
+      >(
         `/api/document?id=${artifact.documentId}`,
         async (currentDocuments) => {
           if (!currentDocuments) return undefined;

@@ -7,11 +7,11 @@ export async function updateSession(request: NextRequest) {
   });
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      throw new Error('Missing Supabase URL');
-    }
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      throw new Error('Missing Supabase Anon Key');
-    }
+    throw new Error('Missing Supabase URL');
+  }
+  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase Anon Key');
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,

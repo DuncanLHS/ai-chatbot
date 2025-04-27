@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   AlertDialog,
@@ -9,62 +9,62 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   useSidebar,
-} from "@/components/ui/sidebar"
-import type { Tables } from "@/lib/db/database.types"
-import { createClient } from "@/lib/supabase/client"
-import { fetcher } from "@/lib/utils"
-import { isToday, isYesterday, subMonths, subWeeks } from "date-fns"
-import { motion } from "framer-motion"
-import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
-import { toast } from "sonner"
-import useSWRInfinite from "swr/infinite"
-import { LoaderIcon } from "./icons"
-import { ChatItem } from "./sidebar-history-item"
+} from '@/components/ui/sidebar';
+import type { Tables } from '@/lib/db/database.types';
+import { createClient } from '@/lib/supabase/client';
+import { fetcher } from '@/lib/utils';
+import { isToday, isYesterday, subMonths, subWeeks } from 'date-fns';
+import { motion } from 'framer-motion';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import useSWRInfinite from 'swr/infinite';
+import { LoaderIcon } from './icons';
+import { ChatItem } from './sidebar-history-item';
 
 type GroupedChats = {
-  today: Tables<"chat">[]
-  yesterday: Tables<"chat">[]
-  lastWeek: Tables<"chat">[]
-  lastMonth: Tables<"chat">[]
-  older: Tables<"chat">[]
-}
+  today: Tables<'chat'>[];
+  yesterday: Tables<'chat'>[];
+  lastWeek: Tables<'chat'>[];
+  lastMonth: Tables<'chat'>[];
+  older: Tables<'chat'>[];
+};
 
 export interface ChatHistory {
-  chats: Array<Tables<"chat">>
-  hasMore: boolean
+  chats: Array<Tables<'chat'>>;
+  hasMore: boolean;
 }
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
-const groupChatsByDate = (chats: Tables<"chat">[]): GroupedChats => {
-  const now = new Date()
-  const oneWeekAgo = subWeeks(now, 1)
-  const oneMonthAgo = subMonths(now, 1)
+const groupChatsByDate = (chats: Tables<'chat'>[]): GroupedChats => {
+  const now = new Date();
+  const oneWeekAgo = subWeeks(now, 1);
+  const oneMonthAgo = subMonths(now, 1);
 
   return chats.reduce(
     (groups, chat) => {
-      const chatDate = new Date(chat.createdAt)
+      const chatDate = new Date(chat.createdAt);
 
       if (isToday(chatDate)) {
-        groups.today.push(chat)
+        groups.today.push(chat);
       } else if (isYesterday(chatDate)) {
-        groups.yesterday.push(chat)
+        groups.yesterday.push(chat);
       } else if (chatDate > oneWeekAgo) {
-        groups.lastWeek.push(chat)
+        groups.lastWeek.push(chat);
       } else if (chatDate > oneMonthAgo) {
-        groups.lastMonth.push(chat)
+        groups.lastMonth.push(chat);
       } else {
-        groups.older.push(chat)
+        groups.older.push(chat);
       }
 
-      return groups
+      return groups;
     },
     {
       today: [],
@@ -72,36 +72,36 @@ const groupChatsByDate = (chats: Tables<"chat">[]): GroupedChats => {
       lastWeek: [],
       lastMonth: [],
       older: [],
-    } as GroupedChats
-  )
-}
+    } as GroupedChats,
+  );
+};
 
 export function getChatHistoryPaginationKey(
   pageIndex: number,
-  previousPageData: ChatHistory
+  previousPageData: ChatHistory,
 ) {
   if (previousPageData && previousPageData.hasMore === false) {
-    return null
+    return null;
   }
 
-  if (pageIndex === 0) return `/api/history?limit=${PAGE_SIZE}`
+  if (pageIndex === 0) return `/api/history?limit=${PAGE_SIZE}`;
 
-  const firstChatFromPage = previousPageData.chats.at(-1)
+  const firstChatFromPage = previousPageData.chats.at(-1);
 
-  if (!firstChatFromPage) return null
+  if (!firstChatFromPage) return null;
 
-  return `/api/history?ending_before=${firstChatFromPage.id}&limit=${PAGE_SIZE}`
+  return `/api/history?ending_before=${firstChatFromPage.id}&limit=${PAGE_SIZE}`;
 }
 
 export function SidebarHistory() {
-  const { setOpenMobile } = useSidebar()
-  const { id } = useParams()
+  const { setOpenMobile } = useSidebar();
+  const { id } = useParams();
 
   const user = async () => {
-    const supabase = createClient()
-    const { data } = await supabase.auth.getUser()
-    return data.user
-  }
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    return data.user;
+  };
 
   const {
     data: paginatedChatHistories,
@@ -111,48 +111,48 @@ export function SidebarHistory() {
     mutate,
   } = useSWRInfinite<ChatHistory>(getChatHistoryPaginationKey, fetcher, {
     fallbackData: [],
-  })
+  });
 
-  const router = useRouter()
-  const [deleteId, setDeleteId] = useState<string | null>(null)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const router = useRouter();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const hasReachedEnd = paginatedChatHistories
     ? paginatedChatHistories.some((page) => page.hasMore === false)
-    : false
+    : false;
 
   const hasEmptyChatHistory = paginatedChatHistories
     ? paginatedChatHistories.every((page) => page.chats.length === 0)
-    : false
+    : false;
 
   const handleDelete = async () => {
     const deletePromise = fetch(`/api/chat?id=${deleteId}`, {
-      method: "DELETE",
-    })
+      method: 'DELETE',
+    });
 
     toast.promise(deletePromise, {
-      loading: "Deleting chat...",
+      loading: 'Deleting chat...',
       success: () => {
         mutate((chatHistories) => {
           if (chatHistories) {
             return chatHistories.map((chatHistory) => ({
               ...chatHistory,
               chats: chatHistory.chats.filter((chat) => chat.id !== deleteId),
-            }))
+            }));
           }
-        })
+        });
 
-        return "Chat deleted successfully"
+        return 'Chat deleted successfully';
       },
-      error: "Failed to delete chat",
-    })
+      error: 'Failed to delete chat',
+    });
 
-    setShowDeleteDialog(false)
+    setShowDeleteDialog(false);
 
     if (deleteId === id) {
-      router.push("/")
+      router.push('/');
     }
-  }
+  };
 
   if (!user) {
     return (
@@ -163,7 +163,7 @@ export function SidebarHistory() {
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
-    )
+    );
   }
 
   if (isLoading) {
@@ -183,7 +183,7 @@ export function SidebarHistory() {
                   className="h-4 rounded-md flex-1 max-w-[--skeleton-width] bg-sidebar-accent-foreground/10"
                   style={
                     {
-                      "--skeleton-width": `${item}%`,
+                      '--skeleton-width': `${item}%`,
                     } as React.CSSProperties
                   }
                 />
@@ -192,7 +192,7 @@ export function SidebarHistory() {
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
-    )
+    );
   }
 
   if (hasEmptyChatHistory) {
@@ -204,7 +204,7 @@ export function SidebarHistory() {
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
-    )
+    );
   }
 
   return (
@@ -215,10 +215,10 @@ export function SidebarHistory() {
             {paginatedChatHistories &&
               (() => {
                 const chatsFromHistory = paginatedChatHistories.flatMap(
-                  (paginatedChatHistory) => paginatedChatHistory.chats
-                )
+                  (paginatedChatHistory) => paginatedChatHistory.chats,
+                );
 
-                const groupedChats = groupChatsByDate(chatsFromHistory)
+                const groupedChats = groupChatsByDate(chatsFromHistory);
 
                 return (
                   <div className="flex flex-col gap-6">
@@ -233,8 +233,8 @@ export function SidebarHistory() {
                             chat={chat}
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
-                              setDeleteId(chatId)
-                              setShowDeleteDialog(true)
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
                           />
@@ -253,8 +253,8 @@ export function SidebarHistory() {
                             chat={chat}
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
-                              setDeleteId(chatId)
-                              setShowDeleteDialog(true)
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
                           />
@@ -273,8 +273,8 @@ export function SidebarHistory() {
                             chat={chat}
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
-                              setDeleteId(chatId)
-                              setShowDeleteDialog(true)
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
                           />
@@ -293,8 +293,8 @@ export function SidebarHistory() {
                             chat={chat}
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
-                              setDeleteId(chatId)
-                              setShowDeleteDialog(true)
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
                           />
@@ -313,8 +313,8 @@ export function SidebarHistory() {
                             chat={chat}
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
-                              setDeleteId(chatId)
-                              setShowDeleteDialog(true)
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
                           />
@@ -322,14 +322,14 @@ export function SidebarHistory() {
                       </div>
                     )}
                   </div>
-                )
+                );
               })()}
           </SidebarMenu>
 
           <motion.div
             onViewportEnter={() => {
               if (!isValidating && !hasReachedEnd) {
-                setSize((size) => size + 1)
+                setSize((size) => size + 1);
               }
             }}
           />
@@ -367,5 +367,5 @@ export function SidebarHistory() {
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
 }

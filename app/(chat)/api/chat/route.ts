@@ -150,7 +150,8 @@ export async function POST(request: Request) {
                       role: assistantMessage.role,
                       parts: assistantMessage.parts as Json,
                       attachments:
-                        assistantMessage.experimental_attachments as unknown as Json ?? [],
+                        (assistantMessage.experimental_attachments as unknown as Json) ??
+                        [],
                     },
                   ],
                 });

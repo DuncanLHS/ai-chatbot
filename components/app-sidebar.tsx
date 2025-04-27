@@ -61,7 +61,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       <SidebarContent>
         <SidebarHistory />
       </SidebarContent>
-      <SidebarFooter>{user && <SidebarUserNav  />}</SidebarFooter>
+      <SidebarFooter>{user && <SidebarUserNav />}</SidebarFooter>
     </Sidebar>
   );
 }

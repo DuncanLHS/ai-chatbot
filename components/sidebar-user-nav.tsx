@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useTheme } from "next-themes"
+import { useTheme } from 'next-themes';
 
 import {
   DropdownMenu,
@@ -8,17 +8,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { UserButton } from "@/components/user-button"
-import { UserMenuTrigger } from "@/components/user-menu-trigger"
+} from '@/components/ui/sidebar';
+import { UserButton } from '@/components/user-button';
+import { UserMenuTrigger } from '@/components/user-menu-trigger';
 
 export function SidebarUserNav() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
 
   return (
     <SidebarMenu>
@@ -40,9 +40,9 @@ export function SidebarUserNav() {
             <DropdownMenuItem
               data-testid="user-nav-item-theme"
               className="cursor-pointer"
-              onSelect={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onSelect={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              {`Toggle ${theme === "light" ? "dark" : "light"} mode`}
+              {`Toggle ${theme === 'light' ? 'dark' : 'light'} mode`}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild data-testid="user-nav-item-auth">
@@ -52,5 +52,5 @@ export function SidebarUserNav() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-"use server"
+'use server';
 
-import type { User } from "@supabase/supabase-js"
-import { ChevronUp } from "lucide-react"
+import type { User } from '@supabase/supabase-js';
+import { ChevronUp } from 'lucide-react';
 
 // const supabase = await createClient()
 // const {
@@ -10,7 +10,7 @@ import { ChevronUp } from "lucide-react"
 // } = await supabase.auth.getUser()
 
 export const UserMenuTrigger = async () => {
-  const user: User | null = null
+  const user: User | null = null;
   return (
     <>
       {/* <Image
@@ -26,5 +26,5 @@ export const UserMenuTrigger = async () => {
 
       <ChevronUp className="ml-auto" />
     </>
-  )
-}
+  );
+};

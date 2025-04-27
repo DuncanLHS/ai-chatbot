@@ -33,7 +33,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     id,
   });
 
-  function convertToUIMessages(messages: Tables<'message'>[]): Array<UIMessage> {
+  function convertToUIMessages(
+    messages: Tables<'message'>[],
+  ): Array<UIMessage> {
     return messages.map((message) => ({
       id: message.id,
       parts: message.parts as UIMessage['parts'],
@@ -56,7 +58,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           id={chat.id}
           initialMessages={convertToUIMessages(messagesFromDb)}
           selectedChatModel={DEFAULT_CHAT_MODEL}
-          selectedVisibilityType={chat.visibility === 'private' ? 'private' : 'public'}
+          selectedVisibilityType={
+            chat.visibility === 'private' ? 'private' : 'public'
+          }
           isReadonly={user?.id !== chat.userId}
           userType={user?.is_anonymous ? 'guest' : 'regular'}
         />
@@ -71,7 +75,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         id={chat.id}
         initialMessages={convertToUIMessages(messagesFromDb)}
         selectedChatModel={chatModelFromCookie.value}
-        selectedVisibilityType={chat.visibility === 'private' ? 'private' : 'public'}
+        selectedVisibilityType={
+          chat.visibility === 'private' ? 'private' : 'public'
+        }
         isReadonly={user?.id !== chat.userId}
         userType={user?.is_anonymous ? 'guest' : 'regular'}
       />

@@ -8,7 +8,7 @@ import { generateUUID } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
-  const user =  await getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect('/api/auth/guest');
