@@ -80,7 +80,7 @@ export async function getMyChats({
         .from('chat')
         .select('*')
         .eq('userId', user?.id)
-        .order('created_at', { ascending: false })
+        .order('createdAt', { ascending: false })
         .limit(extendedLimit);
       
       if (createdAtCondition && comparison) {
