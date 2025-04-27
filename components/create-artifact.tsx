@@ -1,8 +1,8 @@
-import type { Suggestion } from '@/lib/db/schema';
+import { Tables } from '@/lib/db/database.types';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import type { ComponentType, Dispatch, ReactNode, SetStateAction } from 'react';
-import type { DataStreamDelta } from './data-stream-handler';
 import type { UIArtifact } from './artifact';
+import type { DataStreamDelta } from './data-stream-handler';
 
 export type ArtifactActionContext<M = any> = {
   content: string;
@@ -39,7 +39,7 @@ interface ArtifactContent<M = any> {
   isCurrentVersion: boolean;
   currentVersionIndex: number;
   status: 'streaming' | 'idle';
-  suggestions: Array<Suggestion>;
+  suggestions: Array<Tables<'suggestion'>>;
   onSaveContent: (updatedContent: string, debounce: boolean) => void;
   isInline: boolean;
   getDocumentContentById: (index: number) => string;

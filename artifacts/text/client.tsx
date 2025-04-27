@@ -10,12 +10,12 @@ import {
   UndoIcon,
 } from '@/components/icons';
 import { Editor } from '@/components/text-editor';
-import type { Suggestion } from '@/lib/db/schema';
+import { type Tables } from '@/lib/db/database.types';
 import { toast } from 'sonner';
 import { getSuggestions } from '../actions';
 
 interface TextArtifactMetadata {
-  suggestions: Array<Suggestion>;
+  suggestions: Array<Tables<'suggestion'>>;
 }
 
 export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
@@ -34,7 +34,7 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
         return {
           suggestions: [
             ...metadata.suggestions,
-            streamPart.content as Suggestion,
+            streamPart.content as Tables<'suggestion'>,
           ],
         };
       });

@@ -1,21 +1,21 @@
 'use client';
 
-import type { Attachment, UIMessage } from 'ai';
+import { ChatHeader } from '@/components/chat-header';
+import { useArtifactSelector } from '@/hooks/use-artifact';
+import { UserType } from '@/lib/ai/entitlements';
+import { Tables } from '@/lib/db/database.types';
+import { fetcher, generateUUID } from '@/lib/utils';
 import { useChat } from '@ai-sdk/react';
+import type { Attachment, UIMessage } from 'ai';
 import { useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { ChatHeader } from '@/components/chat-header';
-import type { Vote } from '@/lib/db/schema';
-import { fetcher, generateUUID } from '@/lib/utils';
-import { Artifact } from './artifact';
-import { MultimodalInput } from './multimodal-input';
-import { Messages } from './messages';
-import type { VisibilityType } from './visibility-selector';
-import { useArtifactSelector } from '@/hooks/use-artifact';
 import { unstable_serialize } from 'swr/infinite';
+import { Artifact } from './artifact';
+import { Messages } from './messages';
+import { MultimodalInput } from './multimodal-input';
 import { getChatHistoryPaginationKey } from './sidebar-history';
 import { toast } from './toast';
-import type { Session } from 'next-auth';
+import type { VisibilityType } from './visibility-selector';
 
 export function Chat({
   id,
@@ -23,14 +23,14 @@ export function Chat({
   selectedChatModel,
   selectedVisibilityType,
   isReadonly,
-  session,
+  userType,
 }: {
   id: string;
   initialMessages: Array<UIMessage>;
   selectedChatModel: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
-  session: Session;
+  userType: UserType;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -66,7 +66,7 @@ export function Chat({
     },
   });
 
-  const { data: votes } = useSWR<Array<Vote>>(
+  const { data: votes } = useSWR<Array<Tables<'vote'>>>(
     messages.length >= 2 ? `/api/vote?chatId=${id}` : null,
     fetcher,
   );
@@ -82,7 +82,7 @@ export function Chat({
           selectedModelId={selectedChatModel}
           selectedVisibilityType={selectedVisibilityType}
           isReadonly={isReadonly}
-          session={session}
+          userType={userType}
         />
 
         <Messages

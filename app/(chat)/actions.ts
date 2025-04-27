@@ -1,14 +1,14 @@
 'use server';
 
-import { generateText, type UIMessage } from 'ai';
-import { cookies } from 'next/headers';
+import type { VisibilityType } from '@/components/visibility-selector';
+import { myProvider } from '@/lib/ai/providers';
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
   updateChatVisiblityById,
 } from '@/lib/db/queries';
-import type { VisibilityType } from '@/components/visibility-selector';
-import { myProvider } from '@/lib/ai/providers';
+import { generateText, type UIMessage } from 'ai';
+import { cookies } from 'next/headers';
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
@@ -34,11 +34,11 @@ export async function generateTitleFromUserMessage({
 }
 
 export async function deleteTrailingMessages({ id }: { id: string }) {
-  const [message] = await getMessageById({ id });
+  const message = await getMessageById({ id });
 
   await deleteMessagesByChatIdAfterTimestamp({
     chatId: message.chatId,
-    timestamp: message.createdAt,
+    timestamp: new Date(message.createdAt),
   });
 }
 

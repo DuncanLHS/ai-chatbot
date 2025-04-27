@@ -1,5 +1,14 @@
+import { codeArtifact } from '@/artifacts/code/client';
+import { imageArtifact } from '@/artifacts/image/client';
+import { sheetArtifact } from '@/artifacts/sheet/client';
+import { textArtifact } from '@/artifacts/text/client';
+import { useArtifact } from '@/hooks/use-artifact';
+import { Tables } from '@/lib/db/database.types';
+import { fetcher } from '@/lib/utils';
+import type { UseChatHelpers } from '@ai-sdk/react';
 import type { Attachment, UIMessage } from 'ai';
 import { formatDistance } from 'date-fns';
+import equal from 'fast-deep-equal';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   type Dispatch,
@@ -11,22 +20,13 @@ import {
 } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { useDebounceCallback, useWindowSize } from 'usehooks-ts';
-import type { Document, Vote } from '@/lib/db/schema';
-import { fetcher } from '@/lib/utils';
-import { MultimodalInput } from './multimodal-input';
-import { Toolbar } from './toolbar';
-import { VersionFooter } from './version-footer';
 import { ArtifactActions } from './artifact-actions';
 import { ArtifactCloseButton } from './artifact-close-button';
 import { ArtifactMessages } from './artifact-messages';
+import { MultimodalInput } from './multimodal-input';
+import { Toolbar } from './toolbar';
 import { useSidebar } from './ui/sidebar';
-import { useArtifact } from '@/hooks/use-artifact';
-import { imageArtifact } from '@/artifacts/image/client';
-import { codeArtifact } from '@/artifacts/code/client';
-import { sheetArtifact } from '@/artifacts/sheet/client';
-import { textArtifact } from '@/artifacts/text/client';
-import equal from 'fast-deep-equal';
-import type { UseChatHelpers } from '@ai-sdk/react';
+import { VersionFooter } from './version-footer';
 
 export const artifactDefinitions = [
   textArtifact,
@@ -76,7 +76,7 @@ function PureArtifact({
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers['setMessages'];
-  votes: Array<Vote> | undefined;
+  votes: Array<Tables<'vote'>> | undefined;
   append: UseChatHelpers['append'];
   handleSubmit: UseChatHelpers['handleSubmit'];
   reload: UseChatHelpers['reload'];
@@ -88,7 +88,7 @@ function PureArtifact({
     data: documents,
     isLoading: isDocumentsFetching,
     mutate: mutateDocuments,
-  } = useSWR<Array<Document>>(
+  } = useSWR<Array<Tables<'document'>>>(
     artifact.documentId !== 'init' && artifact.status !== 'streaming'
       ? `/api/document?id=${artifact.documentId}`
       : null,
@@ -96,7 +96,7 @@ function PureArtifact({
   );
 
   const [mode, setMode] = useState<'edit' | 'diff'>('edit');
-  const [document, setDocument] = useState<Document | null>(null);
+  const [document, setDocument] = useState<Tables<'document'> | null>(null);
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1);
 
   const { open: isSidebarOpen } = useSidebar();
@@ -127,7 +127,7 @@ function PureArtifact({
     (updatedContent: string) => {
       if (!artifact) return;
 
-      mutate<Array<Document>>(
+      mutate<Array<Omit<Tables<'document'>, 'createdAt'> & { createdAt: Date }>>(
         `/api/document?id=${artifact.documentId}`,
         async (currentDocuments) => {
           if (!currentDocuments) return undefined;

@@ -1,8 +1,8 @@
-import type { Document } from '@/lib/db/schema';
+import type { Tables } from '@/lib/db/database.types';
 import { generateUUID } from '@/lib/utils';
 import { expect, test } from '../fixtures';
 
-const documentsCreatedByAda: Array<Document> = [];
+const documentsCreatedByAda: Array<Tables<'document'>> = [];
 
 test.describe
   .serial('/api/document', () => {

@@ -1,20 +1,15 @@
-import { z } from 'zod';
-import type { Session } from 'next-auth';
-import { type DataStreamWriter, streamObject, tool } from 'ai';
+import { Tables } from '@/lib/db/database.types';
 import { getDocumentById, saveSuggestions } from '@/lib/db/queries';
-import type { Suggestion } from '@/lib/db/schema';
 import { generateUUID } from '@/lib/utils';
+import { type DataStreamWriter, streamObject, tool } from 'ai';
+import { z } from 'zod';
 import { myProvider } from '../providers';
 
 interface RequestSuggestionsProps {
-  session: Session;
   dataStream: DataStreamWriter;
 }
 
-export const requestSuggestions = ({
-  session,
-  dataStream,
-}: RequestSuggestionsProps) =>
+export const requestSuggestions = ({ dataStream }: RequestSuggestionsProps) =>
   tool({
     description: 'Request suggestions for a document',
     parameters: z.object({
@@ -32,7 +27,7 @@ export const requestSuggestions = ({
       }
 
       const suggestions: Array<
-        Omit<Suggestion, 'userId' | 'createdAt' | 'documentCreatedAt'>
+        Omit<Tables<'suggestion'>, 'userId' | 'createdAt' | 'documentCreatedAt'>
       > = [];
 
       const { elementStream } = streamObject({
@@ -66,18 +61,13 @@ export const requestSuggestions = ({
         suggestions.push(suggestion);
       }
 
-      if (session.user?.id) {
-        const userId = session.user.id;
-
-        await saveSuggestions({
-          suggestions: suggestions.map((suggestion) => ({
-            ...suggestion,
-            userId,
-            createdAt: new Date(),
-            documentCreatedAt: document.createdAt,
-          })),
-        });
-      }
+      await saveSuggestions({
+        suggestions: suggestions.map((suggestion) => ({
+          ...suggestion,
+          createdAt: new Date().toISOString(),
+          documentCreatedAt: document.createdAt,
+        })),
+      });
 
       return {
         id: documentId,

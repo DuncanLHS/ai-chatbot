@@ -1,7 +1,7 @@
+import { type Tables } from '@/lib/db/database.types';
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from 'ai';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Document } from '@/lib/db/schema';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -53,7 +53,7 @@ export function getMostRecentUserMessage(messages: Array<UIMessage>) {
 }
 
 export function getDocumentTimestampByIndex(
-  documents: Array<Document>,
+  documents: Array<Tables<'document'>>,
   index: number,
 ) {
   if (!documents) return new Date();

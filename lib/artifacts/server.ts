@@ -4,9 +4,8 @@ import { sheetDocumentHandler } from '@/artifacts/sheet/server';
 import { textDocumentHandler } from '@/artifacts/text/server';
 import type { ArtifactKind } from '@/components/artifact';
 import type { DataStreamWriter } from 'ai';
-import type { Document } from '../db/schema';
+import { Tables } from '../db/database.types';
 import { saveDocument } from '../db/queries';
-import type { Session } from 'next-auth';
 
 export interface SaveDocumentProps {
   id: string;
@@ -20,14 +19,12 @@ export interface CreateDocumentCallbackProps {
   id: string;
   title: string;
   dataStream: DataStreamWriter;
-  session: Session;
 }
 
 export interface UpdateDocumentCallbackProps {
-  document: Document;
+  document: Tables<'document'>;
   description: string;
   dataStream: DataStreamWriter;
-  session: Session;
 }
 
 export interface DocumentHandler<T = ArtifactKind> {
@@ -48,18 +45,14 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         id: args.id,
         title: args.title,
         dataStream: args.dataStream,
-        session: args.session,
       });
 
-      if (args.session?.user?.id) {
-        await saveDocument({
-          id: args.id,
-          title: args.title,
-          content: draftContent,
-          kind: config.kind,
-          userId: args.session.user.id,
-        });
-      }
+      await saveDocument({
+        id: args.id,
+        title: args.title,
+        content: draftContent,
+        kind: config.kind,
+      });
 
       return;
     },
@@ -68,18 +61,14 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         document: args.document,
         description: args.description,
         dataStream: args.dataStream,
-        session: args.session,
       });
 
-      if (args.session?.user?.id) {
-        await saveDocument({
-          id: args.document.id,
-          title: args.document.title,
-          content: draftContent,
-          kind: config.kind,
-          userId: args.session.user.id,
-        });
-      }
+      await saveDocument({
+        id: args.document.id,
+        title: args.document.title,
+        content: draftContent,
+        kind: config.kind,
+      });
 
       return;
     },

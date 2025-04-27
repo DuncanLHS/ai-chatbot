@@ -1,10 +1,10 @@
 'use client';
 
+import { initialArtifactData, useArtifact } from '@/hooks/use-artifact';
+import { Tables } from '@/lib/db/database.types';
 import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef } from 'react';
 import { artifactDefinitions, type ArtifactKind } from './artifact';
-import type { Suggestion } from '@/lib/db/schema';
-import { initialArtifactData, useArtifact } from '@/hooks/use-artifact';
 
 export type DataStreamDelta = {
   type:
@@ -18,7 +18,7 @@ export type DataStreamDelta = {
     | 'clear'
     | 'finish'
     | 'kind';
-  content: string | Suggestion;
+  content: string | Tables<'suggestion'>;
 };
 
 export function DataStreamHandler({ id }: { id: string }) {

@@ -1,11 +1,5 @@
 'use client';
 
-import { isToday, isYesterday, subMonths, subWeeks } from 'date-fns';
-import { useParams, useRouter } from 'next/navigation';
-import type { User } from 'next-auth';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { motion } from 'framer-motion';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,28 +16,34 @@ import {
   SidebarMenu,
   useSidebar,
 } from '@/components/ui/sidebar';
-import type { Chat } from '@/lib/db/schema';
+import { Tables } from '@/lib/db/database.types';
 import { fetcher } from '@/lib/utils';
-import { ChatItem } from './sidebar-history-item';
+import { isToday, isYesterday, subMonths, subWeeks } from 'date-fns';
+import { motion } from 'framer-motion';
+import type { User } from 'next-auth';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import useSWRInfinite from 'swr/infinite';
 import { LoaderIcon } from './icons';
+import { ChatItem } from './sidebar-history-item';
 
 type GroupedChats = {
-  today: Chat[];
-  yesterday: Chat[];
-  lastWeek: Chat[];
-  lastMonth: Chat[];
-  older: Chat[];
+  today: Tables<'chat'>[];
+  yesterday: Tables<'chat'>[];
+  lastWeek: Tables<'chat'>[];
+  lastMonth: Tables<'chat'>[];
+  older: Tables<'chat'>[];
 };
 
 export interface ChatHistory {
-  chats: Array<Chat>;
+  chats: Array<Tables<'chat'>>;
   hasMore: boolean;
 }
 
 const PAGE_SIZE = 20;
 
-const groupChatsByDate = (chats: Chat[]): GroupedChats => {
+const groupChatsByDate = (chats: Tables<'chat'>[]): GroupedChats => {
   const now = new Date();
   const oneWeekAgo = subWeeks(now, 1);
   const oneMonthAgo = subMonths(now, 1);

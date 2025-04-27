@@ -1,16 +1,16 @@
+import type { Tables } from '@/lib/db/database.types';
+import type { UseChatHelpers } from '@ai-sdk/react';
 import type { UIMessage } from 'ai';
+import equal from 'fast-deep-equal';
+import { memo } from 'react';
+import { Greeting } from './greeting';
 import { PreviewMessage, ThinkingMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
-import { Greeting } from './greeting';
-import { memo } from 'react';
-import type { Vote } from '@/lib/db/schema';
-import equal from 'fast-deep-equal';
-import type { UseChatHelpers } from '@ai-sdk/react';
 
 interface MessagesProps {
   chatId: string;
   status: UseChatHelpers['status'];
-  votes: Array<Vote> | undefined;
+  votes: Array<Tables<'vote'>> | undefined;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers['setMessages'];
   reload: UseChatHelpers['reload'];

@@ -1,9 +1,11 @@
+import { Tables } from '@/lib/db/database.types';
 import type { Message } from 'ai';
 import { useSWRConfig } from 'swr';
 import { useCopyToClipboard } from 'usehooks-ts';
 
-import type { Vote } from '@/lib/db/schema';
-
+import equal from 'fast-deep-equal';
+import { memo } from 'react';
+import { toast } from 'sonner';
 import { CopyIcon, ThumbDownIcon, ThumbUpIcon } from './icons';
 import { Button } from './ui/button';
 import {
@@ -12,9 +14,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip';
-import { memo } from 'react';
-import equal from 'fast-deep-equal';
-import { toast } from 'sonner';
 
 export function PureMessageActions({
   chatId,
@@ -24,7 +23,7 @@ export function PureMessageActions({
 }: {
   chatId: string;
   message: Message;
-  vote: Vote | undefined;
+  vote: Tables<'vote'> | undefined;
   isLoading: boolean;
 }) {
   const { mutate } = useSWRConfig();
@@ -83,7 +82,7 @@ export function PureMessageActions({
                 toast.promise(upvote, {
                   loading: 'Upvoting Response...',
                   success: () => {
-                    mutate<Array<Vote>>(
+                    mutate<Array<Tables<'vote'>>>(
                       `/api/vote?chatId=${chatId}`,
                       (currentVotes) => {
                         if (!currentVotes) return [];
@@ -136,7 +135,7 @@ export function PureMessageActions({
                 toast.promise(downvote, {
                   loading: 'Downvoting Response...',
                   success: () => {
-                    mutate<Array<Vote>>(
+                    mutate<Array<Tables<'vote'>>>(
                       `/api/vote?chatId=${chatId}`,
                       (currentVotes) => {
                         if (!currentVotes) return [];

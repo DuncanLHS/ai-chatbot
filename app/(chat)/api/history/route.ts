@@ -1,6 +1,5 @@
-import { auth } from '@/app/(auth)/auth';
+import { getMyChats } from '@/lib/db/queries';
 import type { NextRequest } from 'next/server';
-import { getChatsByUserId } from '@/lib/db/queries';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -16,15 +15,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return Response.json('Unauthorized!', { status: 401 });
-  }
-
   try {
-    const chats = await getChatsByUserId({
-      id: session.user.id,
+    const chats = await getMyChats({
       limit,
       startingAfter,
       endingBefore,

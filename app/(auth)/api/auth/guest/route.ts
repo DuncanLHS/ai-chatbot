@@ -1,21 +1,20 @@
-import { signIn } from '@/app/(auth)/auth';
-import { isDevelopmentEnvironment } from '@/lib/constants';
-import { getToken } from 'next-auth/jwt';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const redirectUrl = searchParams.get('redirectUrl') || '/';
 
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-    secureCookie: !isDevelopmentEnvironment,
-  });
+  const supabase = await createClient();
 
-  if (token) {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (user) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  return signIn('guest', { redirect: true, redirectTo: redirectUrl });
+  return supabase.auth.signInAnonymously();
 }

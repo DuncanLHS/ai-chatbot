@@ -1,10 +1,15 @@
-import type { Chat } from '@/lib/db/schema';
-import {
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from './ui/sidebar';
+import { useChatVisibility } from '@/hooks/use-chat-visibility';
+import { Tables } from '@/lib/db/database.types';
 import Link from 'next/link';
+import { memo } from 'react';
+import {
+  CheckCircleFillIcon,
+  GlobeIcon,
+  LockIcon,
+  MoreHorizontalIcon,
+  ShareIcon,
+  TrashIcon,
+} from './icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,15 +21,10 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import {
-  CheckCircleFillIcon,
-  GlobeIcon,
-  LockIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  TrashIcon,
-} from './icons';
-import { memo } from 'react';
-import { useChatVisibility } from '@/hooks/use-chat-visibility';
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from './ui/sidebar';
 
 const PureChatItem = ({
   chat,
@@ -32,14 +32,14 @@ const PureChatItem = ({
   onDelete,
   setOpenMobile,
 }: {
-  chat: Chat;
+  chat: Tables<'chat'>;
   isActive: boolean;
   onDelete: (chatId: string) => void;
   setOpenMobile: (open: boolean) => void;
 }) => {
   const { visibilityType, setVisibilityType } = useChatVisibility({
     chatId: chat.id,
-    initialVisibility: chat.visibility,
+    initialVisibility: chat.visibility === 'private' ? 'private' : 'public',
   });
 
   return (

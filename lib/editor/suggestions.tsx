@@ -7,11 +7,11 @@ import {
 } from 'prosemirror-view';
 import { createRoot } from 'react-dom/client';
 
-import { Suggestion as PreviewSuggestion } from '@/components/suggestion';
-import type { Suggestion } from '@/lib/db/schema';
 import type { ArtifactKind } from '@/components/artifact';
+import { Suggestion as PreviewSuggestion } from '@/components/suggestion';
+import { Tables } from '../db/database.types';
 
-export interface UISuggestion extends Suggestion {
+export interface UISuggestion extends Tables<'suggestion'> {
   selectionStart: number;
   selectionEnd: number;
 }
@@ -46,7 +46,7 @@ function findPositionsInDoc(doc: Node, searchText: string): Position | null {
 
 export function projectWithPositions(
   doc: Node,
-  suggestions: Array<Suggestion>,
+  suggestions: Array<Tables<'suggestion'>>,
 ): Array<UISuggestion> {
   return suggestions.map((suggestion) => {
     const positions = findPositionsInDoc(doc, suggestion.originalText);
