@@ -11,6 +11,9 @@
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "off"
   },
+  "paths": {
+    "@/*": ["./*"]
+  },
   "settings": {
     "import/resolver": {
       "typescript": {
