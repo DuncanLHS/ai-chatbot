@@ -3,16 +3,13 @@ import { cookies } from 'next/headers';
 import { Chat } from '@/components/chat';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
-import { getUser } from '@/lib/db/queries';
 import { generateUUID } from '@/lib/utils';
-import { redirect } from 'next/navigation';
+import { getUser } from '../auth/actions';
 
 export default async function Page() {
   const user = await getUser();
 
-  if (!user) {
-    redirect('/api/auth/guest');
-  }
+  console.log('user', user);
 
   const id = generateUUID();
 
@@ -29,7 +26,7 @@ export default async function Page() {
           selectedChatModel={DEFAULT_CHAT_MODEL}
           selectedVisibilityType="private"
           isReadonly={false}
-          userType={user.is_anonymous ? 'guest' : 'regular'}
+          userType={user?.is_anonymous ? 'guest' : 'regular'}
         />
         <DataStreamHandler id={id} />
       </>
@@ -45,7 +42,7 @@ export default async function Page() {
         selectedChatModel={modelIdFromCookie.value}
         selectedVisibilityType="private"
         isReadonly={false}
-        userType={user.is_anonymous ? 'guest' : 'regular'}
+        userType={user?.is_anonymous ? 'guest' : 'regular'}
       />
       <DataStreamHandler id={id} />
     </>

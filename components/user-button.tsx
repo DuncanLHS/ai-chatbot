@@ -1,17 +1,16 @@
-'use server';
+'use client';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
 
-export const UserButton = async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+interface UserButtonProps {
+  isAnonymous: boolean;
+}
 
-  const logout = async () => {
-    await supabase.auth.signOut();
+export const UserButton = ({ isAnonymous }: UserButtonProps) => {
+  const logout = () => {
+    const supabase = createClient();
+    supabase.auth.signOut();
     return redirect('/');
   };
 
@@ -20,14 +19,14 @@ export const UserButton = async () => {
       type="button"
       className="w-full cursor-pointer"
       onClick={() => {
-        if (user?.is_anonymous) {
+        if (isAnonymous) {
           redirect('/login');
         } else {
           logout();
         }
       }}
     >
-      {user?.is_anonymous ? 'Login to your account' : 'Sign out'}
+      {isAnonymous ? 'Login to your account' : 'Sign out'}
     </button>
   );
 };

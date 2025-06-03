@@ -16,9 +16,31 @@ import {
 } from '@/components/ui/sidebar';
 import { UserButton } from '@/components/user-button';
 import { UserMenuTrigger } from '@/components/user-menu-trigger';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 export function SidebarUserNav() {
   const { setTheme, theme } = useTheme();
+
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isAnonymous, setIsAnonymous] = useState(true);
+
+  //client side auth
+
+  useEffect(() => {
+    async function fetchUser() {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserEmail(user.email ?? null);
+        setIsAnonymous(user.is_anonymous ?? true);
+      }
+    }
+    fetchUser();
+  }, []);
 
   return (
     <SidebarMenu>
@@ -29,7 +51,7 @@ export function SidebarUserNav() {
               data-testid="user-nav-button"
               className="data-[state=open]:bg-sidebar-accent bg-background data-[state=open]:text-sidebar-accent-foreground h-10"
             >
-              <UserMenuTrigger />
+              <UserMenuTrigger userEmail={userEmail} isAnonymous={isAnonymous}/>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -46,7 +68,7 @@ export function SidebarUserNav() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild data-testid="user-nav-item-auth">
-              <UserButton />
+              <UserButton isAnonymous={isAnonymous}/>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

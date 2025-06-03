@@ -1,27 +1,30 @@
-'use server';
+'use client';
 
-import type { User } from '@supabase/supabase-js';
 import { ChevronUp } from 'lucide-react';
+import Image from 'next/image';
 
-// const supabase = await createClient()
-// const {
-//   data: { user },
-//   error,
-// } = await supabase.auth.getUser()
+export interface UserMenuTriggerProps {
+  userEmail: string | null;
+  isAnonymous: boolean;
+}
 
-export const UserMenuTrigger = async () => {
-  const user: User | null = null;
+export const UserMenuTrigger = ({
+  userEmail,
+  isAnonymous,
+}: UserMenuTriggerProps) => {
   return (
     <>
-      {/* <Image
-        src={`https://avatar.vercel.sh/${user?.email}`}
-        alt={user?.email ?? "User Avatar"}
-        width={24}
-        height={24}
-        className="rounded-full"
-      /> */}
+      {userEmail && (
+        <Image
+          src={`https://avatar.vercel.sh/${userEmail}`}
+          alt={userEmail ?? 'User Avatar'}
+          width={24}
+          height={24}
+          className="rounded-full"
+        />
+      )}
       <span data-testid="user-email" className="truncate">
-        {/* {user?.is_anonymous ? "Guest" : user?.email} */} test
+        {isAnonymous ? 'Guest' : userEmail || 'test'}
       </span>
 
       <ChevronUp className="ml-auto" />

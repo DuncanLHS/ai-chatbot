@@ -1,15 +1,33 @@
 import 'server-only';
 
 import type { ArtifactKind } from '@/components/artifact';
-import type { User } from '@supabase/supabase-js';
 import { createClient } from '../supabase/server';
 import type { Tables, TablesInsert } from './database.types';
+import type { User } from '@supabase/supabase-js';
 
 export async function getUser(): Promise<User | undefined> {
-  const superbase = await createClient();
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await superbase.auth.getUser();
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error('Failed to get user from database', error);
+    throw error;
+  }
+
+  if (!user) {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInAnonymously();
+    if (error) {
+      console.error('Failed to get user from database', error);
+      throw error;
+    }
+    return user ?? undefined;
+  }
 
   return user ?? undefined;
 }
@@ -67,7 +85,9 @@ export async function getMyChats({
   try {
     const supabase = await createClient();
 
-    const user = await getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error('User not found');
